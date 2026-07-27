@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CareMate 照護寶</string>
+    <string name="title_activity_main">CareMate 照護寶</string>
+    <string name="package_name">com.caremate.elderlycare</string>
+    <string name="custom_url_scheme">com.caremate.elderlycare</string>
+</resources>

@@ -1,0 +1,11 @@
+{
+  "appId": "com.caremate.elderlycare",
+  "appName": "CareMate 照護寶",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "ios": {
+    "contentInset": "always",
+    "allowsLinkPreview": false,
+    "scrollEnabled": true
+  }
+}
