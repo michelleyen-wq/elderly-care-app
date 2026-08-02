@@ -114,7 +114,7 @@ export default function App() {
       <main className="main-content">
         {/* Quick Launch Exercise Reminder Alert Banner */}
         <div 
-          onClick={() => setIsExerciseOpen(true)}
+          onClick={() => setActiveTab('exercise')}
           style={{
             background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
             color: 'white',
@@ -138,7 +138,7 @@ export default function App() {
             </div>
           </div>
           <span style={{ background: 'white', color: '#b45309', padding: '4px 10px', borderRadius: '10px', fontSize: '12px', fontWeight: '800' }}>
-            開始
+            開啟專區
           </span>
         </div>
 
@@ -147,6 +147,7 @@ export default function App() {
         {activeTab === 'health' && <HealthTracker lang={lang} t={t} caregiverCode={caregiverCode} />}
         {activeTab === 'bathroom' && <BathroomLog lang={lang} t={t} caregiverCode={caregiverCode} />}
         {activeTab === 'ultrasound' && <UltrasoundLog lang={lang} t={t} />}
+        {activeTab === 'exercise' && <ExercisePopup isInline={true} lang={lang} t={t} onEarnApple={handleEarnApple} />}
       </main>
 
       {/* Bottom Navigation Bar */}
@@ -189,6 +190,14 @@ export default function App() {
         >
           <Camera className="nav-icon" size={20} />
           <span>{t.tabDailyLog}</span>
+        </button>
+
+        <button 
+          className={`nav-item ${activeTab === 'exercise' ? 'active' : ''}`}
+          onClick={() => setActiveTab('exercise')}
+        >
+          <Dumbbell className="nav-icon" size={20} />
+          <span>{t.tabExercise}</span>
         </button>
       </nav>
 
@@ -289,6 +298,7 @@ export default function App() {
         onClose={() => setIsExerciseOpen(false)}
         lang={lang}
         t={t}
+        onEarnApple={handleEarnApple}
       />
 
       {/* Family Care Share Modal */}
