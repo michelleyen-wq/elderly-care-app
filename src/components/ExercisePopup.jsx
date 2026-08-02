@@ -48,7 +48,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
 
   const currentSession = sessionsConfig[selectedSession];
 
-  // 60FPS HTML5 Canvas Animated Video Engine Loop
+  // 60FPS HTML5 Canvas Continuous Animated Video Engine (ALWAYS ANIMATING!)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -58,13 +58,15 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
 
     const render = () => {
       frameCount++;
-      const time = frameCount * 0.05;
+      // Speed multiplier: faster when playing, gentle motion when idle
+      const speed = isPlaying ? 0.08 : 0.04;
+      const time = frameCount * speed;
       const width = canvas.width;
       const height = canvas.height;
 
       // 1. Clear & Background Gradient (Sky to Grass Park)
       const skyGrad = ctx.createLinearGradient(0, 0, 0, height);
-      skyGrad.addColorStop(0, '#bfdbfe');
+      skyGrad.addColorStop(0, '#a5f3fc');
       skyGrad.addColorStop(0.55, '#e0f2fe');
       skyGrad.addColorStop(0.55, '#86efac');
       skyGrad.addColorStop(1, '#22c55e');
@@ -79,38 +81,36 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
 
       // Clouds
       const cloud1X = (frameCount * 0.5) % (width + 100) - 50;
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
       ctx.beginPath();
       ctx.arc(cloud1X, 35, 16, 0, Math.PI * 2);
       ctx.arc(cloud1X + 18, 30, 20, 0, Math.PI * 2);
       ctx.arc(cloud1X + 36, 35, 16, 0, Math.PI * 2);
       ctx.fill();
 
-      // 3. Draw Park Benches (Left: Grandma, Right: Grandpa)
-      // Left Bench
+      // 3. Draw Park Benches
       ctx.fillStyle = '#78350f';
       ctx.fillRect(50, 95, 80, 10);
       ctx.fillRect(55, 105, 8, 40);
       ctx.fillRect(115, 105, 8, 40);
       ctx.fillRect(45, 60, 8, 45);
 
-      // Right Bench
       ctx.fillRect(190, 95, 80, 10);
       ctx.fillRect(195, 105, 8, 40);
       ctx.fillRect(255, 105, 8, 40);
       ctx.fillRect(185, 60, 8, 45);
 
-      // Smooth Motion Trigonometry
-      const motion = isPlaying ? Math.sin(time * 3) : 0;
-      const armAngle = motion * 0.8; // Arm swing amplitude
-      const legOffsetY = currentSession.actionType === 'leg' && isPlaying ? Math.abs(Math.sin(time * 3)) * 14 : 0;
-      const headOffsetY = isPlaying ? Math.sin(time * 3) * 3 : 0;
+      // Trigonometric Continuous Movement (ALWAYS ACTIVE)
+      const motion = Math.sin(time * 3);
+      const armAngle = motion * (isPlaying ? 0.9 : 0.4);
+      const legOffsetY = currentSession.actionType === 'leg' ? Math.abs(Math.sin(time * 3)) * (isPlaying ? 16 : 8) : 0;
+      const headOffsetY = Math.sin(time * 3) * (isPlaying ? 4 : 2);
 
-      // 4. Draw Cartoon Grandma (Left Character)
+      // 4. Draw Cartoon Grandma (Left Character - Pink Outfit)
       ctx.save();
       ctx.translate(90, 50 + headOffsetY);
 
-      // Grandma Hair Bun
+      // Hair Bun & Face
       ctx.fillStyle = '#cbd5e1';
       ctx.beginPath();
       ctx.arc(0, 0, 22, 0, Math.PI * 2);
@@ -120,13 +120,12 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.arc(0, -18, 8, 0, Math.PI * 2);
       ctx.fill();
 
-      // Face
       ctx.fillStyle = '#ffedd5';
       ctx.beginPath();
       ctx.arc(0, 2, 16, 0, Math.PI * 2);
       ctx.fill();
 
-      // Glasses
+      // Glasses & Happy Smile
       ctx.strokeStyle = '#334155';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -138,22 +137,19 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.lineTo(2, 0);
       ctx.stroke();
 
-      // Smile
       ctx.strokeStyle = '#e11d48';
       ctx.beginPath();
       ctx.arc(0, 6, 5, 0.1 * Math.PI, 0.9 * Math.PI);
       ctx.stroke();
-
       ctx.restore();
 
-      // Grandma Body Clothes (Pink)
+      // Grandma Clothes
       ctx.fillStyle = '#ec4899';
       ctx.beginPath();
       ctx.roundRect(74, 68 + headOffsetY, 32, 36, 6);
       ctx.fill();
 
-      // Grandma Moving Arms (Left & Right)
-      // Left Arm
+      // Grandma Animated Arms
       ctx.save();
       ctx.translate(74, 72 + headOffsetY);
       ctx.rotate(-0.5 + armAngle);
@@ -161,7 +157,6 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.fillRect(-22, -4, 22, 8);
       ctx.restore();
 
-      // Right Arm
       ctx.save();
       ctx.translate(106, 72 + headOffsetY);
       ctx.rotate(0.5 - armAngle);
@@ -178,23 +173,20 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.fillRect(90, 132 - legOffsetY, 18, 8);
 
 
-      // 5. Draw Cartoon Grandpa (Right Character)
+      // 5. Draw Cartoon Grandpa (Right Character - Blue Outfit)
       ctx.save();
       ctx.translate(230, 50 + headOffsetY);
 
-      // Grandpa Face & Hair
       ctx.fillStyle = '#ffedd5';
       ctx.beginPath();
       ctx.arc(0, 2, 18, 0, Math.PI * 2);
       ctx.fill();
 
-      // Hair
       ctx.fillStyle = '#e2e8f0';
       ctx.beginPath();
       ctx.arc(0, -8, 18, Math.PI, Math.PI * 2);
       ctx.fill();
 
-      // Eyes & Mustache
       ctx.fillStyle = '#334155';
       ctx.beginPath();
       ctx.arc(-6, -2, 2, 0, Math.PI * 2);
@@ -210,13 +202,13 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
 
       ctx.restore();
 
-      // Grandpa Body Clothes (Blue)
+      // Grandpa Clothes
       ctx.fillStyle = '#3b82f6';
       ctx.beginPath();
       ctx.roundRect(214, 68 + headOffsetY, 32, 36, 6);
       ctx.fill();
 
-      // Grandpa Moving Arms (Left & Right)
+      // Grandpa Animated Arms
       ctx.save();
       ctx.translate(214, 72 + headOffsetY);
       ctx.rotate(-0.5 - armAngle);
@@ -236,13 +228,13 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.fillRect(218, 102 - legOffsetY, 10, 32);
       ctx.fillRect(232, 102 - legOffsetY, 10, 32);
       ctx.fillStyle = '#0369a1';
-      ctx.fillRect(212, 132 - legOffsetY, 18, 8);
-      ctx.fillRect(230, 132 - legOffsetY, 18, 8);
+      ctx.fillRect(197, 132 - legOffsetY, 18, 8);
+      ctx.fillRect(218, 132 - legOffsetY, 18, 8);
 
 
       // 6. Draw Live Video HUD Overlay
-      ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
-      ctx.fillRect(10, 10, 140, 24);
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+      ctx.fillRect(10, 10, 155, 24);
       ctx.fillStyle = isPlaying ? '#ef4444' : '#22c55e';
       ctx.beginPath();
       ctx.arc(22, 22, 5, 0, Math.PI * 2);
@@ -250,10 +242,10 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
 
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 11px sans-serif';
-      ctx.fillText(isPlaying ? '🔴 1080p HD LIVE 視訊' : '🟢 視訊Ready 待命', 34, 26);
+      ctx.fillText(isPlaying ? '🔴 1080p 動畫視訊播放中' : '🟢 卡通帶動畫面 (即刻開始)', 34, 26);
 
       // Bottom Action Banner Overlay
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
       ctx.fillRect(10, height - 36, width - 20, 28);
       ctx.fillStyle = '#fde047';
       ctx.font = 'bold 12px sans-serif';
