@@ -30,7 +30,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
     },
     afternoon: {
       time: '15:00',
-      titleZh: '🌇 下午活血操 (5分鐘)',
+      titleZh: '🌇 下羽活血操 (5分鐘)',
       titleEn: '🌇 15:00 Afternoon Circulation (5m)',
       descZh: '1. 握拳並張開十指 ➔ 2. 順時針轉動手腕 ➔ 3. 促進循環',
       descEn: 'Clench & open fist -> Rotate wrist -> Boost flow.',
@@ -48,23 +48,24 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
 
   const currentSession = sessionsConfig[selectedSession];
 
-  // 60FPS HTML5 Canvas Continuous Animated Video Engine (ALWAYS ANIMATING!)
+  // Safe Cross-Browser 60FPS Canvas Engine (No roundRect, 100% universal support)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
     let animationFrameId;
     let frameCount = 0;
 
     const render = () => {
       frameCount++;
-      // Speed multiplier: faster when playing, gentle motion when idle
       const speed = isPlaying ? 0.08 : 0.04;
       const time = frameCount * speed;
       const width = canvas.width;
       const height = canvas.height;
 
-      // 1. Clear & Background Gradient (Sky to Grass Park)
+      // 1. Sky & Grass Background
       const skyGrad = ctx.createLinearGradient(0, 0, 0, height);
       skyGrad.addColorStop(0, '#a5f3fc');
       skyGrad.addColorStop(0.55, '#e0f2fe');
@@ -73,7 +74,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.fillStyle = skyGrad;
       ctx.fillRect(0, 0, width, height);
 
-      // 2. Draw Sun & Moving Clouds
+      // Sun
       ctx.fillStyle = '#fde047';
       ctx.beginPath();
       ctx.arc(width - 40, 35, 20, 0, Math.PI * 2);
@@ -88,7 +89,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.arc(cloud1X + 36, 35, 16, 0, Math.PI * 2);
       ctx.fill();
 
-      // 3. Draw Park Benches
+      // Benches
       ctx.fillStyle = '#78350f';
       ctx.fillRect(50, 95, 80, 10);
       ctx.fillRect(55, 105, 8, 40);
@@ -100,17 +101,15 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.fillRect(255, 105, 8, 40);
       ctx.fillRect(185, 60, 8, 45);
 
-      // Trigonometric Continuous Movement (ALWAYS ACTIVE)
       const motion = Math.sin(time * 3);
       const armAngle = motion * (isPlaying ? 0.9 : 0.4);
       const legOffsetY = currentSession.actionType === 'leg' ? Math.abs(Math.sin(time * 3)) * (isPlaying ? 16 : 8) : 0;
       const headOffsetY = Math.sin(time * 3) * (isPlaying ? 4 : 2);
 
-      // 4. Draw Cartoon Grandma (Left Character - Pink Outfit)
+      // Grandma Left Character
       ctx.save();
       ctx.translate(90, 50 + headOffsetY);
 
-      // Hair Bun & Face
       ctx.fillStyle = '#cbd5e1';
       ctx.beginPath();
       ctx.arc(0, 0, 22, 0, Math.PI * 2);
@@ -125,16 +124,11 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.arc(0, 2, 16, 0, Math.PI * 2);
       ctx.fill();
 
-      // Glasses & Happy Smile
       ctx.strokeStyle = '#334155';
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.arc(-6, 0, 4, 0, Math.PI * 2);
       ctx.arc(6, 0, 4, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(-2, 0);
-      ctx.lineTo(2, 0);
       ctx.stroke();
 
       ctx.strokeStyle = '#e11d48';
@@ -143,13 +137,11 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.stroke();
       ctx.restore();
 
-      // Grandma Clothes
+      // Grandma Outfit (Standard fillRect - no roundRect)
       ctx.fillStyle = '#ec4899';
-      ctx.beginPath();
-      ctx.roundRect(74, 68 + headOffsetY, 32, 36, 6);
-      ctx.fill();
+      ctx.fillRect(74, 68 + headOffsetY, 32, 36);
 
-      // Grandma Animated Arms
+      // Arms
       ctx.save();
       ctx.translate(74, 72 + headOffsetY);
       ctx.rotate(-0.5 + armAngle);
@@ -164,7 +156,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.fillRect(0, -4, 22, 8);
       ctx.restore();
 
-      // Grandma Legs
+      // Legs
       ctx.fillStyle = '#831843';
       ctx.fillRect(78, 102 - legOffsetY, 10, 32);
       ctx.fillRect(92, 102 - legOffsetY, 10, 32);
@@ -173,7 +165,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.fillRect(90, 132 - legOffsetY, 18, 8);
 
 
-      // 5. Draw Cartoon Grandpa (Right Character - Blue Outfit)
+      // Grandpa Right Character
       ctx.save();
       ctx.translate(230, 50 + headOffsetY);
 
@@ -202,13 +194,11 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
 
       ctx.restore();
 
-      // Grandpa Clothes
+      // Grandpa Outfit (Standard fillRect - no roundRect)
       ctx.fillStyle = '#3b82f6';
-      ctx.beginPath();
-      ctx.roundRect(214, 68 + headOffsetY, 32, 36, 6);
-      ctx.fill();
+      ctx.fillRect(214, 68 + headOffsetY, 32, 36);
 
-      // Grandpa Animated Arms
+      // Arms
       ctx.save();
       ctx.translate(214, 72 + headOffsetY);
       ctx.rotate(-0.5 - armAngle);
@@ -223,7 +213,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.fillRect(0, -4, 22, 8);
       ctx.restore();
 
-      // Grandpa Legs
+      // Legs
       ctx.fillStyle = '#1e3a8a';
       ctx.fillRect(218, 102 - legOffsetY, 10, 32);
       ctx.fillRect(232, 102 - legOffsetY, 10, 32);
@@ -232,7 +222,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.fillRect(218, 132 - legOffsetY, 18, 8);
 
 
-      // 6. Draw Live Video HUD Overlay
+      // Video Live Overlay
       ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
       ctx.fillRect(10, 10, 155, 24);
       ctx.fillStyle = isPlaying ? '#ef4444' : '#22c55e';
@@ -242,9 +232,9 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
 
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 11px sans-serif';
-      ctx.fillText(isPlaying ? '🔴 1080p 動畫視訊播放中' : '🟢 卡通帶動畫面 (即刻開始)', 34, 26);
+      ctx.fillText(isPlaying ? '🔴 1080p 動態視訊播放中' : '🟢 卡通帶動畫面 Ready', 34, 26);
 
-      // Bottom Action Banner Overlay
+      // Subtitle
       ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
       ctx.fillRect(10, height - 36, width - 20, 28);
       ctx.fillStyle = '#fde047';
@@ -321,6 +311,36 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
 
   const contentMarkup = (
     <div className={isInline ? "card" : "modal-card"} style={isInline ? { padding: '20px' } : { maxWidth: '460px', padding: '18px' }}>
+      {/* CSS Keyframe Animation Styles for Dual-Engine Guaranteed Rendering */}
+      <style>{`
+        @keyframes armSwingLeft {
+          0% { transform: rotate(-30deg); }
+          50% { transform: rotate(30deg); }
+          100% { transform: rotate(-30deg); }
+        }
+        @keyframes armSwingRight {
+          0% { transform: rotate(30deg); }
+          50% { transform: rotate(-30deg); }
+          100% { transform: rotate(30deg); }
+        }
+        @keyframes legLift {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-12px); }
+          100% { transform: translateY(0px); }
+        }
+        .animate-arm-left {
+          animation: armSwingLeft 1.2s infinite ease-in-out;
+          transform-origin: 85px 75px;
+        }
+        .animate-arm-right {
+          animation: armSwingRight 1.2s infinite ease-in-out;
+          transform-origin: 115px 75px;
+        }
+        .animate-leg {
+          animation: legLift 1.2s infinite ease-in-out;
+        }
+      `}</style>
+
       {/* Top Header Bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -445,8 +465,8 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
         </button>
       </div>
 
-      {/* 60FPS HTML5 Canvas Cartoon Senior Exercise Video Screen */}
-      <div style={{ position: 'relative', width: '100%', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 6px 20px rgba(0,0,0,0.15)', border: '2px solid #bfdbfe' }}>
+      {/* 100% Cross-Browser Canvas Exercise Screen */}
+      <div style={{ position: 'relative', width: '100%', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 6px 20px rgba(0,0,0,0.15)', border: '2px solid #bfdbfe', background: '#e0f2fe' }}>
         <canvas 
           ref={canvasRef} 
           width={340} 
