@@ -9,7 +9,7 @@ import ExercisePopup from './components/ExercisePopup';
 import FamilyShareModal from './components/FamilyShareModal';
 
 import { translations } from './locales/i18n';
-import { Calendar, Utensils, Pill, Activity, FileImage, Dumbbell, UserCheck, X, ShieldCheck } from 'lucide-react';
+import { Calendar, Utensils, Pill, Activity, Camera, Dumbbell, UserCheck, X, ShieldCheck } from 'lucide-react';
 import { tts } from './services/ttsService';
 import './styles/theme.css';
 
@@ -187,8 +187,8 @@ export default function App() {
           className={`nav-item ${activeTab === 'ultrasound' ? 'active' : ''}`}
           onClick={() => setActiveTab('ultrasound')}
         >
-          <FileImage className="nav-icon" size={20} />
-          <span>{t.tabUltrasound}</span>
+          <Camera className="nav-icon" size={20} />
+          <span>{t.tabDailyLog}</span>
         </button>
       </nav>
 
