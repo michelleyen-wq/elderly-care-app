@@ -137,28 +137,24 @@ export const translations = {
     viewFullScreen: "全螢幕檢視照片",
     shareWithFamily: "分享給家人/醫師",
 
-    // Scheduled Exercise Pop-up
-    exerciseTitle: "長者椅上溫和運動課程",
-    exerciseSubtitle: "動態動畫視覺示範與背景舒緩樂曲",
-    startExerciseBtn: "🚀 啟動定時運動提醒",
-    exerciseAlertTitle: "⏰ 定時運動時間到了！",
-    exerciseAlertBody: "請跟著運動動畫與節奏樂曲，做 5 分鐘椅上動一動吧！",
+    // Senior Cartoon Exercise (高齡銀髮族每日四次卡通運動)
+    exerciseTitle: "高齡銀髮族卡通健康操",
+    exerciseSubtitle: "每日 4 次 • 每次 5 分鐘 • 卡通動畫安全椅上操",
+    startExerciseBtn: "🚀 啟動銀髮族卡通運動",
+    exerciseAlertTitle: "⏰ 運動時間到了！",
+    exerciseAlertBody: "請跟著卡通爺爺奶奶動畫，做 5 分鐘簡單椅上健康操吧！",
     musicToggle: "🎵 背景音樂",
     musicOn: "音樂播放中",
     musicOff: "音樂已靜音",
-    exerciseStep1: "1. 深呼吸與肩部旋轉 (動態示範)",
-    exerciseStep2: "2. Chair Stretch 腳踏板活絡 (動態示範)",
-    exerciseStep3: "3. 手腕與手指關節伸展 (動態示範)",
-    startTimer: "開始訓練",
-    pauseTimer: "暫停",
-    finishExercise: "完成訓練打卡",
-    voiceCoaching: "動態動畫與語音教練引導中...",
-
-    // Family Share Modal
-    familyShareTitle: "👨‍👩‍👧‍👦 家人共同照顧群組",
-    familyShareDesc: "已同步更新至LINE家族照顧群組與雲端日誌，小美與大明皆可同步收到通知。",
-    closeModal: "關閉視窗",
-    copyLink: "複製照顧日誌連結"
+    sessionMorning: "☀️ 09:00 早晨醒腦操 (5分鐘)",
+    sessionNoon: "⛅ 12:00 午間舒敏操 (5分鐘)",
+    sessionAfternoon: "🌇 15:00 下午活血操 (5分鐘)",
+    sessionEvening: "🌙 19:30 晚間安眠操 (5分鐘)",
+    cartoonDemoLabel: "🎨 銀髮族卡通示範動畫",
+    startTimer: "開始 5 分鐘訓練",
+    pauseTimer: "暫停訓練",
+    finishExercise: "完成訓練打卡 (獲得 🍎 1 顆)",
+    voiceCoaching: "卡通人物動態引導中..."
   },
   en: {
     appName: "CareMate",
@@ -298,27 +294,23 @@ export const translations = {
     viewFullScreen: "View Full Photo",
     shareWithFamily: "Share with Family/Doctor",
 
-    // Scheduled Exercise Pop-up
-    exerciseTitle: "Gentle Chair Exercise Course",
-    exerciseSubtitle: "Dynamic animations & relaxing background music",
-    startExerciseBtn: "🚀 Launch Scheduled Exercise",
-    exerciseAlertTitle: "⏰ Exercise Time!",
-    exerciseAlertBody: "Follow animated figure & music for a 5-min chair workout!",
+    // Senior Cartoon Exercise (高齡銀髮族每日四次卡通運動)
+    exerciseTitle: "Senior Cartoon Workout",
+    exerciseSubtitle: "4 times daily • 5 mins each • Animated chair exercises",
+    startExerciseBtn: "🚀 Launch Senior Cartoon Workout",
+    exerciseAlertTitle: "⏰ Workout Time!",
+    exerciseAlertBody: "Follow animated cartoon grandparents for a 5-min chair workout!",
     musicToggle: "🎵 Music",
     musicOn: "Music Playing",
     musicOff: "Music Muted",
-    exerciseStep1: "1. Deep Breathing & Shoulder Rolls (Animated)",
-    exerciseStep2: "2. Seated Leg Lifts (Animated)",
-    exerciseStep3: "3. Wrist & Finger Stretch (Animated)",
-    startTimer: "Start Session",
-    pauseTimer: "Pause",
-    finishExercise: "Complete Workout",
-    voiceCoaching: "Animation & voice coach active...",
-
-    // Family Share Modal
-    familyShareTitle: "👨‍👩‍👧‍👦 Family Care Group",
-    familyShareDesc: "Synced to Family LINE Care Group & Cloud Storage.",
-    closeModal: "Close",
-    copyLink: "Copy Shared Care Log Link"
+    sessionMorning: "☀️ 09:00 Morning Stretch (5m)",
+    sessionNoon: "⛅ 12:00 Noon Flex (5m)",
+    sessionAfternoon: "🌇 15:00 Afternoon Circulation (5m)",
+    sessionEvening: "🌙 19:30 Evening Sleep Prep (5m)",
+    cartoonDemoLabel: "🎨 Cartoon Senior Animation",
+    startTimer: "Start 5-Min Workout",
+    pauseTimer: "Pause Session",
+    finishExercise: "Complete Workout (Earn 🍎 1)",
+    voiceCoaching: "Cartoon character coaching active..."
   }
 };
