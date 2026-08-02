@@ -7,9 +7,11 @@ import BathroomLog from './components/BathroomLog';
 import UltrasoundLog from './components/UltrasoundLog';
 import ExercisePopup from './components/ExercisePopup';
 import FamilyShareModal from './components/FamilyShareModal';
+import SosModal from './components/SosModal';
+import DoctorReportModal from './components/DoctorReportModal';
 
 import { translations } from './locales/i18n';
-import { Calendar, Utensils, Pill, Activity, Camera, Dumbbell, UserCheck, X, ShieldCheck } from 'lucide-react';
+import { Calendar, Utensils, Pill, Activity, Camera, Dumbbell, UserCheck, X, ShieldCheck, AlertTriangle, FileText, Crown } from 'lucide-react';
 import { tts } from './services/ttsService';
 import './styles/theme.css';
 
@@ -42,6 +44,8 @@ export default function App() {
   // Modals state
   const [isExerciseOpen, setIsExerciseOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isSosOpen, setIsSosOpen] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   useEffect(() => {
     if (isLargeFont) {
@@ -90,8 +94,31 @@ export default function App() {
       {/* Top iOS Status Bar */}
       <div className="ios-notch">
         <span>09:41</span>
-        <span>CareMate App</span>
+        <span>CareMate Pro Commercial Release</span>
         <span>📶 100% 🔋</span>
+      </div>
+
+      {/* Commercial License & Quick Action Top Bar */}
+      <div style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)', color: 'white', padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '800', color: '#fbbf24' }}>
+          <Crown size={15} color="#fbbf24" /> CareMate Pro 商業專業版已授權
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button 
+            onClick={() => setIsReportOpen(true)}
+            style={{ background: 'rgba(255,255,255,0.2)', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '10px', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+          >
+            <FileText size={13} /> 就醫報告
+          </button>
+
+          <button 
+            onClick={() => setIsSosOpen(true)}
+            style={{ background: '#ef4444', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '10px', fontSize: '11px', fontWeight: '900', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', animation: 'pulse 2s infinite' }}
+          >
+            <AlertTriangle size={13} /> SOS 求救
+          </button>
+        </div>
       </div>
 
       {/* Main App Header */}
@@ -307,6 +334,23 @@ export default function App() {
         onClose={() => setIsShareOpen(false)}
         lang={lang}
         t={t}
+      />
+
+      {/* SOS Emergency Modal */}
+      <SosModal
+        isOpen={isSosOpen}
+        onClose={() => setIsSosOpen(false)}
+        caregiverCode={caregiverCode}
+        elderName={elderProfile.name}
+      />
+
+      {/* Clinic Doctor Health Report Modal */}
+      <DoctorReportModal
+        isOpen={isReportOpen}
+        onClose={() => setIsReportOpen(false)}
+        elderProfile={elderProfile}
+        caregiverCode={caregiverCode}
+        lang={lang}
       />
     </div>
   );

@@ -1,0 +1,22 @@
+{
+  "short_name": "CareMate",
+  "name": "CareMate 照護宝 Pro - 居家長者照顧與健康日誌",
+  "description": "長者居家照顧分享 App，包含每日行程、葷素獨立食譜、吃藥與喝水提醒、大小號排洩紀錄、日常照護照片、緊急求救與定時運動課程",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=192&h=192&q=80",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=512&h=512&q=80",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#4f46e5",
+  "theme_color": "#4f46e5",
+  "display": "standalone",
+  "orientation": "portrait"
+}
