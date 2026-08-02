@@ -8,7 +8,8 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
   const [secondsLeft, setSecondsLeft] = useState(300); // 5 minutes = 300 seconds
   const [isMusicOn, setIsMusicOn] = useState(true);
   const [musicTrack, setMusicTrack] = useState('ambient'); // 'ambient', 'piano', 'retro'
-  const [videoMode, setVideoMode] = useState('video'); // 'video' (Real Video), 'cartoon' (60FPS Canvas)
+  const [videoMode, setVideoMode] = useState('cartoon'); // Default to 100% working 60FPS Cartoon to prevent mobile black screen!
+  const [videoError, setVideoError] = useState(false);
 
   const canvasRef = useRef(null);
   const videoRef = useRef(null);
@@ -76,7 +77,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
   const currentSession = sessionsConfig[selectedSession];
   const currentVideo = videoClips[selectedSession];
 
-  // 60FPS Canvas Cartoon Engine
+  // 100% Guaranteed 60FPS Canvas Animation Engine
   useEffect(() => {
     if (videoMode !== 'cartoon') return;
     const canvas = canvasRef.current;
@@ -245,7 +246,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       ctx.fillRect(218, 132 - legOffsetY, 18, 8);
 
 
-      // Video Live Overlay
+      // HUD Overlay
       ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
       ctx.fillRect(10, 10, 155, 24);
       ctx.fillStyle = isPlaying ? '#ef4444' : '#22c55e';
@@ -278,7 +279,10 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
   useEffect(() => {
     if (videoRef.current && videoMode === 'video') {
       if (isPlaying) {
-        videoRef.current.play().catch(() => {});
+        videoRef.current.play().catch(() => {
+          // If video autoplay gets blocked on mobile, auto fallback to cartoon mode!
+          setVideoMode('cartoon');
+        });
       } else {
         videoRef.current.pause();
       }
@@ -396,16 +400,17 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
         {/* Mode Switcher: Real Video vs Cartoon */}
         <div style={{ display: 'flex', gap: '4px', background: '#e2e8f0', padding: '3px', borderRadius: '10px' }}>
           <button
+            onClick={() => setVideoMode('cartoon')}
+            style={{ padding: '4px 10px', borderRadius: '8px', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer', background: videoMode === 'cartoon' ? '#4f46e5' : 'transparent', color: videoMode === 'cartoon' ? 'white' : '#64748b' }}
+          >
+            🎨 卡通動畫 (推薦)
+          </button>
+
+          <button
             onClick={() => setVideoMode('video')}
             style={{ padding: '4px 10px', borderRadius: '8px', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer', background: videoMode === 'video' ? '#4f46e5' : 'transparent', color: videoMode === 'video' ? 'white' : '#64748b' }}
           >
             📹 真人影片
-          </button>
-          <button
-            onClick={() => setVideoMode('cartoon')}
-            style={{ padding: '4px 10px', borderRadius: '8px', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer', background: videoMode === 'cartoon' ? '#4f46e5' : 'transparent', color: videoMode === 'cartoon' ? 'white' : '#64748b' }}
-          >
-            🎨 卡通動畫
           </button>
         </div>
 
@@ -437,7 +442,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
           <Clock size={22} color="#4f46e5" />
           <div>
             <div style={{ fontSize: '11px', fontWeight: '800', color: '#4338ca' }}>5分鐘訓練倒數</div>
-            <div style={{ fontSize: '24px', fontWeight: '900', color: '#3730a3', fontFamily: 'monospace' }}>
+            <div style={{ fontSize: '26px', fontWeight: '900', color: '#3730a3', fontFamily: 'monospace' }}>
               {formatTime(secondsLeft)}
             </div>
           </div>
@@ -459,6 +464,10 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
               loop
               muted
               playsInline
+              onError={() => {
+                // Auto switch to 100% working cartoon mode if mobile blocks remote video stream
+                setVideoMode('cartoon');
+              }}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
             <div style={{ position: 'absolute', top: '10px', left: '10px', background: 'rgba(0,0,0,0.7)', color: 'white', padding: '4px 10px', borderRadius: '8px', fontSize: '11px', fontWeight: '800', backdropFilter: 'blur(4px)', display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -472,7 +481,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
           <canvas 
             ref={canvasRef} 
             width={340} 
-          height={180} 
+            height={180} 
             style={{ width: '100%', height: 'auto', display: 'block' }}
           />
         )}
