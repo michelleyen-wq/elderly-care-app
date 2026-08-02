@@ -1,7 +1,7 @@
 export const translations = {
   zh: {
-    appName: "CareMate 照護寶",
-    appSubtitle: "長者居家照顧與健康日誌",
+    appName: "暖心寶 CareMate Pro",
+    appSubtitle: "銀髮長者居家照顧與溫馨健康日誌",
     elderName: "張奶奶",
     elderAge: "82 歲",
     elderWeight: "58 kg",
@@ -27,13 +27,13 @@ export const translations = {
     appleCount: "健康蘋果",
     appleEarned: "🍎 太棒了！完成行程獲得 1 顆蘋果！",
     
-    // Navigation Tabs
-    tabSchedule: "每日行程",
-    tabRecipes: "養生食譜",
-    tabHealth: "吃藥與喝水",
-    tabBathroom: "大小號紀錄",
-    tabDailyLog: "日常紀錄",
-    tabExercise: "定時運動",
+    // Navigation Tabs (溫暖創意名稱)
+    tabSchedule: "☀️ 暖心作息",
+    tabRecipes: "🥗 暖胃食堂",
+    tabHealth: "💊 關懷服藥",
+    tabBathroom: "💩 腸胃順暢",
+    tabDailyLog: "📷 溫馨剪影",
+    tabExercise: "🎨 歡樂椅上動",
     
     // Daily Schedule
     scheduleTitle: "今天的生活作息",
@@ -51,7 +51,7 @@ export const translations = {
     logAdded: "已加入家人共享日誌",
 
     // Recipes Photo Capture
-    recipeTitle: "長者健康食譜指南",
+    recipeTitle: "暖胃養生健康食譜",
     recipeSubtitle: "每日菜單輪播與料理實體照片拍攝紀錄",
     tabVeg: "🌱 養生素食 (Vegetarian)",
     tabNonVeg: "🥩 營養葷食 (Non-Vegetarian)",
@@ -68,7 +68,7 @@ export const translations = {
     fiber: "膳食纖維",
 
     // Medication & Hydration (Meal Period & Pill Photo)
-    medTitle: "吃藥時間提醒",
+    medTitle: "關懷服藥時間提醒",
     waterTitle: "每日喝水量追蹤",
     calcWaterBtn: "⚙️ 依體重年齡算水量",
     calcModalTitle: "💧 長者個人化每日飲水計算器",
@@ -102,7 +102,7 @@ export const translations = {
     saveMedBtn: "儲存藥物設定",
 
     // Bathroom Log
-    bathroomTitle: "大小號健康紀錄",
+    bathroomTitle: "腸胃順暢健康紀錄",
     bathroomSubtitle: "追蹤腸胃與水分代謝，提供就醫參考",
     recordStool: "💩 紀錄大便",
     recordUrine: "💧 紀錄小便",
@@ -116,8 +116,8 @@ export const translations = {
     notePlaceholder: "填寫備註...",
     addLogSuccess: "紀錄成功已儲存！",
 
-    // Daily Care & Medical Log (日常紀錄)
-    dailyLogTitle: "日常照護與健康紀錄",
+    // Daily Care & Medical Log (溫馨剪影)
+    dailyLogTitle: "溫馨生活剪影與健康紀錄",
     dailyLogSubtitle: "拍攝生活照片、生理數值照、處方籤與醫學影像",
     uploadDailyLog: "+ 📷 拍照上傳日常紀錄",
     filterAll: "全部紀錄",
@@ -137,10 +137,10 @@ export const translations = {
     viewFullScreen: "全螢幕檢視照片",
     shareWithFamily: "分享給家人/醫師",
 
-    // Senior Cartoon Exercise (高齡銀髮族每日四次卡通運動)
-    exerciseTitle: "高齡銀髮族卡通健康操",
+    // Senior Cartoon Exercise (歡樂椅上動)
+    exerciseTitle: "歡樂椅上動健康操",
     exerciseSubtitle: "每日 4 次 • 每次 5 分鐘 • 卡通動畫安全椅上操",
-    startExerciseBtn: "🚀 啟動銀髮族卡通運動",
+    startExerciseBtn: "🚀 啟動歡樂椅上動健康操",
     exerciseAlertTitle: "⏰ 運動時間到了！",
     exerciseAlertBody: "請跟著卡通爺爺奶奶動畫，做 5 分鐘簡單椅上健康操吧！",
     musicToggle: "🎵 背景音樂",
@@ -150,15 +150,15 @@ export const translations = {
     sessionNoon: "⛅ 12:00 午間舒敏操 (5分鐘)",
     sessionAfternoon: "🌇 15:00 下午活血操 (5分鐘)",
     sessionEvening: "🌙 19:30 晚間安眠操 (5分鐘)",
-    cartoonDemoLabel: "🎨 銀髮族卡通示範動畫",
+    cartoonDemoLabel: "🎨 歡樂動態動畫影音帶動",
     startTimer: "開始 5 分鐘訓練",
     pauseTimer: "暫停訓練",
     finishExercise: "完成訓練打卡 (獲得 🍎 1 顆)",
     voiceCoaching: "卡通人物動態引導中..."
   },
   en: {
-    appName: "CareMate",
-    appSubtitle: "Elderly Home Care & Health Journal",
+    appName: "WarmCare Pro",
+    appSubtitle: "Warm Senior Home Care & Health Journal",
     elderName: "Grandma Chang",
     elderAge: "82 yrs",
     elderWeight: "58 kg",
@@ -185,12 +185,12 @@ export const translations = {
     appleEarned: "🍎 Great! Completed routine and earned 1 Apple!",
 
     // Navigation Tabs
-    tabSchedule: "Schedule",
-    tabRecipes: "Recipes",
-    tabHealth: "Meds & Water",
-    tabBathroom: "Bathroom Log",
-    tabDailyLog: "Daily Log",
-    tabExercise: "Exercise Course",
+    tabSchedule: "☀️ Schedule",
+    tabRecipes: "🥗 Kitchen",
+    tabHealth: "💊 Meds",
+    tabBathroom: "💩 Digestion",
+    tabDailyLog: "📷 Snapshots",
+    tabExercise: "🎨 Exercise",
     
     // Daily Schedule
     scheduleTitle: "Today's Care Routine",
@@ -208,7 +208,7 @@ export const translations = {
     logAdded: "Synced to Shared Log",
 
     // Recipes Photo Capture
-    recipeTitle: "Elderly Nutrition & Recipe Guide",
+    recipeTitle: "Nourishing Kitchen Recipes",
     recipeSubtitle: "Daily menu rotation & dish photo upload",
     tabVeg: "🌱 Vegetarian Recipes",
     tabNonVeg: "🥩 Non-Vegetarian Recipes",
@@ -225,7 +225,7 @@ export const translations = {
     fiber: "Fiber",
 
     // Medication & Hydration (Meal Period & Pill Photo)
-    medTitle: "Medication Reminders",
+    medTitle: "Caring Med Reminders",
     waterTitle: "Hydration Tracker",
     calcWaterBtn: "⚙️ Calc by Weight & Age",
     calcModalTitle: "💧 Personalized Hydration Calculator",
@@ -259,7 +259,7 @@ export const translations = {
     saveMedBtn: "Save Med Settings",
 
     // Bathroom Log
-    bathroomTitle: "Bowel & Bladder Tracking Log",
+    bathroomTitle: "Digestion & Bladder Log",
     bathroomSubtitle: "Monitor digestive health and hydration status",
     recordStool: "💩 Record Stool",
     recordUrine: "💧 Record Urine",
@@ -273,8 +273,8 @@ export const translations = {
     notePlaceholder: "Add notes...",
     addLogSuccess: "Log saved successfully!",
 
-    // Daily Care & Medical Log (日常紀錄)
-    dailyLogTitle: "Daily Care & Medical Log",
+    // Daily Care & Medical Log
+    dailyLogTitle: "Warm Life Snapshots",
     dailyLogSubtitle: "Photo logs for daily life, vitals, prescriptions & ultrasound scans",
     uploadDailyLog: "+ 📷 Add Daily Log Photo",
     filterAll: "All Logs",
@@ -294,10 +294,10 @@ export const translations = {
     viewFullScreen: "View Full Photo",
     shareWithFamily: "Share with Family/Doctor",
 
-    // Senior Cartoon Exercise (高齡銀髮族每日四次卡通運動)
-    exerciseTitle: "Senior Cartoon Workout",
+    // Senior Cartoon Exercise
+    exerciseTitle: "Joyful Chair Exercise",
     exerciseSubtitle: "4 times daily • 5 mins each • Animated chair exercises",
-    startExerciseBtn: "🚀 Launch Senior Cartoon Workout",
+    startExerciseBtn: "🚀 Launch Joyful Chair Exercise",
     exerciseAlertTitle: "⏰ Workout Time!",
     exerciseAlertBody: "Follow animated cartoon grandparents for a 5-min chair workout!",
     musicToggle: "🎵 Music",
@@ -307,7 +307,7 @@ export const translations = {
     sessionNoon: "⛅ 12:00 Noon Flex (5m)",
     sessionAfternoon: "🌇 15:00 Afternoon Circulation (5m)",
     sessionEvening: "🌙 19:30 Evening Sleep Prep (5m)",
-    cartoonDemoLabel: "🎨 Cartoon Senior Animation",
+    cartoonDemoLabel: "🎨 Animated Video Stream",
     startTimer: "Start 5-Min Workout",
     pauseTimer: "Pause Session",
     finishExercise: "Complete Workout (Earn 🍎 1)",
