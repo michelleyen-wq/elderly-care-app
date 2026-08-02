@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Play, Pause, CheckCircle, Music, Volume2, Sparkles, Dumbbell, Clock } from 'lucide-react';
+import { X, Play, Pause, CheckCircle, Music, Volume2, Sparkles, Dumbbell, Clock, Tv } from 'lucide-react';
 import { tts } from '../services/ttsService';
 
 export default function ExercisePopup({ isOpen, onClose, isInline = false, lang, t, onEarnApple }) {
@@ -15,32 +15,32 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       time: '09:00',
       titleZh: '☀️ 早晨醒腦操 (5分鐘)',
       titleEn: '☀️ 09:00 Morning Stretch (5m)',
-      descZh: '椅上姿勢正坐，放鬆肩膀做雙臂向上伸展與深呼吸。',
-      descEn: 'Sit upright, relax shoulders, and do arm stretches with deep breaths.',
+      descZh: '1. 正坐椅上 ➔ 2. 雙臂舉高伸展 ➔ 3. 深呼吸調息',
+      descEn: 'Sit upright -> Raise arms -> Take deep breaths.',
       actionType: 'stretch'
     },
     noon: {
       time: '12:00',
       titleZh: '⛅ 午間舒敏操 (5分鐘)',
       titleEn: '⛅ 12:00 Noon Flex (5m)',
-      descZh: '雙腳踩穩，慢慢抬膝離地 5 秒，重複活絡大腿肌群。',
-      descEn: 'Keep feet flat, slowly lift knees for 5 seconds to activate thigh muscles.',
+      descZh: '1. 雙腳踩平 ➔ 2. 慢慢抬膝離地 5 秒 ➔ 3. 換腳重複',
+      descEn: 'Feet flat -> Slowly lift knee for 5s -> Alternate legs.',
       actionType: 'leg'
     },
     afternoon: {
       time: '15:00',
       titleZh: '🌇 下午活血操 (5分鐘)',
       titleEn: '🌇 15:00 Afternoon Circulation (5m)',
-      descZh: '雙手握拳並張開十指，搭配手腕順時針旋轉活血。',
-      descEn: 'Fist and open 10 fingers, rotate wrists clockwise for joint health.',
+      descZh: '1. 握拳並張開十指 ➔ 2. 順時針轉動手腕 ➔ 3. 促進循環',
+      descEn: 'Clench & open fist -> Rotate wrist -> Boost flow.',
       actionType: 'wrist'
     },
     evening: {
       time: '19:30',
       titleZh: '🌙 晚間安眠操 (5分鐘)',
       titleEn: '🌙 19:30 Evening Sleep Prep (5m)',
-      descZh: '腳尖上揚與踩地幫浦，幫助下肢血液循環舒壓助眠。',
-      descEn: 'Toe ups and heel pumps to boost leg circulation for better sleep.',
+      descZh: '1. 腳尖向上抬 ➔ 2. 踩地幫浦動作 ➔ 3. 舒壓助眠',
+      descEn: 'Raise toes -> Heel pump -> Relax for sound sleep.',
       actionType: 'ankle'
     }
   };
@@ -57,7 +57,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       // Cartoon Figure Animation Step loop
       animTimer = setInterval(() => {
         setAnimationStep(prev => (prev + 1) % 4);
-      }, 800);
+      }, 500); // 500ms smooth animation rate
     } else if (secondsLeft === 0) {
       setIsPlaying(false);
       tts.stopExerciseMusic();
@@ -112,87 +112,156 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  // Render Senior Cartoon Animated Figure SVG
-  const renderCartoonFigure = () => {
-    const activeY = animationStep % 2 === 0 ? 0 : -10;
-    const armRotate = animationStep % 2 === 0 ? -15 : 15;
-    const legOffsetY = currentSession.actionType === 'leg' && animationStep % 2 === 1 ? -12 : 0;
+  // Render Full Cartoon Exercise Stage SVG (Park Stage + Cartoon Grandma & Grandpa Character Duo)
+  const renderCartoonStage = () => {
+    const isOdd = animationStep % 2 === 1;
+    const bodyY = isPlaying && isOdd ? -8 : 0;
+    const armAngleLeft = isPlaying ? (isOdd ? -40 : 10) : 0;
+    const armAngleRight = isPlaying ? (isOdd ? 40 : -10) : 0;
+    const legOffsetY = currentSession.actionType === 'leg' && isPlaying && isOdd ? -16 : 0;
 
     return (
       <div style={{
-        background: 'linear-gradient(135deg, #fef3c7 0%, #fde047 100%)',
-        borderRadius: '20px',
-        padding: '18px',
+        background: 'linear-gradient(180deg, #bfdbfe 0%, #e0f2fe 60%, #86efac 60%, #4ade80 100%)',
+        borderRadius: '24px',
+        padding: '16px',
         textAlign: 'center',
         margin: '14px 0',
         position: 'relative',
-        boxShadow: '0 6px 20px rgba(250, 204, 21, 0.35)',
-        border: '2px solid #fcd34d'
+        boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)',
+        border: '3px solid #60a5fa',
+        overflow: 'hidden'
       }}>
-        <div style={{ fontSize: '13px', fontWeight: '900', color: '#854d0e', marginBottom: '8px' }}>
-          🎨 {t.cartoonDemoLabel} ({isPlaying ? '律動中...' : '預備姿勢'})
+        {/* Stage Header Banner */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.85)', padding: '6px 12px', borderRadius: '12px', backdropFilter: 'blur(4px)', marginBottom: '10px' }}>
+          <div style={{ fontSize: '13px', fontWeight: '900', color: '#1e40af', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Tv size={16} color="#2563eb" /> 📺 卡通銀髮族運動動畫影音
+          </div>
+          <span style={{
+            background: isPlaying ? '#ef4444' : '#64748b',
+            color: 'white',
+            padding: '2px 8px',
+            borderRadius: '10px',
+            fontSize: '11px',
+            fontWeight: '800',
+            animation: isPlaying ? 'pulse 1.5s infinite' : 'none'
+          }}>
+            {isPlaying ? '🔴 播放示範中' : '⏸️ 準備就緒'}
+          </span>
         </div>
 
-        {/* SVG Cartoon Senior Character (Grandma & Grandpa Cartoon Figure) in Chair */}
-        <svg width="220" height="160" viewBox="0 0 200 150">
-          {/* Chair Base */}
-          <rect x="70" y="80" width="60" height="10" rx="4" fill="#854d0e" />
-          <rect x="75" y="90" width="8" height="45" fill="#ca8a04" />
-          <rect x="117" y="90" width="8" height="45" fill="#ca8a04" />
-          <rect x="65" y="45" width="8" height="45" fill="#854d0e" />
+        {/* SVG Cartoon Senior Characters (Grandma & Grandpa Cartoon Duo on Park Benches) */}
+        <svg width="100%" height="190" viewBox="0 0 320 180" style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.15))' }}>
+          {/* Outdoor Park Background Elements */}
+          {/* Sun */}
+          <circle cx="280" cy="35" r="18" fill="#fde047" />
+          <line x1="280" y1="10" x2="280" y2="5" stroke="#facc15" strokeWidth="3" />
+          <line x1="300" y1="35" x2="305" y2="35" stroke="#facc15" strokeWidth="3" />
+          <line x1="295" y1="20" x2="300" y2="15" stroke="#facc15" strokeWidth="3" />
+          
+          {/* Park Trees */}
+          <rect x="25" y="70" width="10" height="40" fill="#78350f" />
+          <circle cx="30" cy="60" r="22" fill="#22c55e" />
+          <rect x="280" y="80" width="10" height="35" fill="#78350f" />
+          <circle cx="285" cy="70" r="18" fill="#16a34a" />
 
-          {/* Senior Cartoon Grandma/Grandpa Head */}
-          <g transform={`translate(0, ${isPlaying ? activeY : 0})`}>
-            {/* Hair (Glasses & Cute Grandma Hair bun) */}
-            <circle cx="100" cy="35" r="22" fill="#e2e8f0" />
-            <circle cx="100" cy="18" r="8" fill="#cbd5e1" />
-            <circle cx="100" cy="38" r="16" fill="#fde047" opacity="0.3" />
+          {/* Park Wooden Chairs */}
+          {/* Chair Left (Grandma) */}
+          <rect x="70" y="110" width="65" height="12" rx="4" fill="#92400e" />
+          <rect x="75" y="122" width="8" height="38" fill="#78350f" />
+          <rect x="122" y="122" width="8" height="38" fill="#78350f" />
+          <rect x="65" y="70" width="8" height="50" fill="#92400e" />
 
-            {/* Face */}
-            <circle cx="100" cy="38" r="15" fill="#ffedd5" />
-            {/* Glasses */}
-            <circle cx="94" cy="36" r="4" fill="none" stroke="#475569" strokeWidth="1.5" />
-            <circle cx="106" cy="36" r="4" fill="none" stroke="#475569" strokeWidth="1.5" />
-            <line x1="98" y1="36" x2="102" y2="36" stroke="#475569" strokeWidth="1.5" />
-            {/* Happy Smile */}
-            <path d="M 95 44 Q 100 48 105 44" stroke="#e11d48" strokeWidth="2" fill="none" />
-            {/* Rosy Cheeks */}
-            <circle cx="90" cy="40" r="3" fill="#fda4af" opacity="0.8" />
-            <circle cx="110" cy="40" r="3" fill="#fda4af" opacity="0.8" />
+          {/* Chair Right (Grandpa) */}
+          <rect x="185" y="110" width="65" height="12" rx="4" fill="#92400e" />
+          <rect x="190" y="122" width="8" height="38" fill="#78350f" />
+          <rect x="237" y="122" width="8" height="38" fill="#78350f" />
+          <rect x="180" y="70" width="8" height="50" fill="#92400e" />
+
+          {/* ================= CARTOON GRANDMA (LEFT) ================= */}
+          <g transform={`translate(0, ${bodyY})`}>
+            {/* Grandma Head */}
+            <circle cx="102" cy="55" r="22" fill="#cbd5e1" /> {/* Grey Bun Hair */}
+            <circle cx="102" cy="38" r="8" fill="#94a3b8" /> {/* Hair Bun */}
+            <circle cx="102" cy="58" r="16" fill="#ffedd5" /> {/* Face */}
+            {/* Glasses & Smile */}
+            <circle cx="96" cy="56" r="4" fill="none" stroke="#334155" strokeWidth="1.5" />
+            <circle cx="108" cy="56" r="4" fill="none" stroke="#334155" strokeWidth="1.5" />
+            <line x1="100" y1="56" x2="104" y2="56" stroke="#334155" strokeWidth="1.5" />
+            <path d="M 97 64 Q 102 68 107 64" stroke="#e11d48" strokeWidth="2" fill="none" />
+            <circle cx="92" cy="60" r="3" fill="#fda4af" opacity="0.8" />
+            <circle cx="112" cy="60" r="3" fill="#fda4af" opacity="0.8" />
+
+            {/* Grandma Clothes */}
+            <path d="M 87 74 L 117 74 L 122 110 L 82 110 Z" fill="#ec4899" rx="6" />
+
+            {/* Grandma Animated Arms */}
+            <g transform={`rotate(${armAngleLeft}, 87, 76)`}>
+              <rect x="67" y="75" width="22" height="8" rx="4" fill="#ffedd5" />
+              <circle cx="65" cy="79" r="5" fill="#ffedd5" />
+            </g>
+            <g transform={`rotate(${armAngleRight}, 117, 76)`}>
+              <rect x="117" y="75" width="22" height="8" rx="4" fill="#ffedd5" />
+              <circle cx="140" cy="79" r="5" fill="#ffedd5" />
+            </g>
+
+            {/* Grandma Legs */}
+            <g transform={`translate(0, ${legOffsetY})`}>
+              <rect x="88" y="110" width="10" height="35" rx="4" fill="#831843" />
+              <rect x="106" y="110" width="10" height="35" rx="4" fill="#831843" />
+              <rect x="82" y="145" width="18" height="8" rx="4" fill="#be185d" />
+              <rect x="103" y="145" width="18" height="8" rx="4" fill="#be185d" />
+            </g>
           </g>
 
-          {/* Cartoon Torso Clothes */}
-          <path d="M 85 54 L 115 54 L 120 85 L 80 85 Z" fill="#3b82f6" rx="6" />
+          {/* ================= CARTOON GRANDPA (RIGHT) ================= */}
+          <g transform={`translate(0, ${bodyY})`}>
+            {/* Grandpa Head */}
+            <circle cx="217" cy="55" r="20" fill="#ffedd5" /> {/* Face */}
+            <path d="M 197 50 Q 217 38 237 50" fill="#e2e8f0" /> {/* Hair */}
+            {/* Mustache & Smile */}
+            <path d="M 210 63 Q 217 60 224 63" stroke="#64748b" strokeWidth="3" fill="none" />
+            <circle cx="212" cy="55" r="2" fill="#000" />
+            <circle cx="222" cy="55" r="2" fill="#000" />
 
-          {/* Animated Cartoon Arms */}
-          <g transform={`rotate(${isPlaying ? armRotate : 0}, 85, 56)`}>
-            <rect x="65" y="55" width="20" height="8" rx="4" fill="#ffedd5" />
-            <circle cx="63" cy="59" r="4" fill="#ffedd5" />
-          </g>
-          <g transform={`rotate(${isPlaying ? -armRotate : 0}, 115, 56)`}>
-            <rect x="115" y="55" width="20" height="8" rx="4" fill="#ffedd5" />
-            <circle cx="137" cy="59" r="4" fill="#ffedd5" />
-          </g>
+            {/* Grandpa Clothes */}
+            <path d="M 202 74 L 232 74 L 237 110 L 197 110 Z" fill="#3b82f6" rx="6" />
 
-          {/* Animated Legs & Feet */}
-          <g transform={`translate(0, ${legOffsetY})`}>
-            <rect x="85" y="85" width="10" height="35" rx="4" fill="#1e3a8a" />
-            <rect x="105" y="85" width="10" height="35" rx="4" fill="#1e3a8a" />
-            {/* Shoes */}
-            <rect x="80" y="120" width="18" height="8" rx="4" fill="#e11d48" />
-            <rect x="102" y="120" width="18" height="8" rx="4" fill="#e11d48" />
+            {/* Grandpa Animated Arms */}
+            <g transform={`rotate(${armAngleRight}, 202, 76)`}>
+              <rect x="182" y="75" width="22" height="8" rx="4" fill="#ffedd5" />
+              <circle cx="180" cy="79" r="5" fill="#ffedd5" />
+            </g>
+            <g transform={`rotate(${armAngleLeft}, 232, 76)`}>
+              <rect x="232" y="75" width="22" height="8" rx="4" fill="#ffedd5" />
+              <circle cx="255" cy="79" r="5" fill="#ffedd5" />
+            </g>
+
+            {/* Grandpa Legs */}
+            <g transform={`translate(0, ${legOffsetY})`}>
+              <rect x="203" y="110" width="10" height="35" rx="4" fill="#1e3a8a" />
+              <rect x="221" y="110" width="10" height="35" rx="4" fill="#1e3a8a" />
+              <rect x="197" y="145" width="18" height="8" rx="4" fill="#0369a1" />
+              <rect x="218" y="145" width="18" height="8" rx="4" fill="#0369a1" />
+            </g>
           </g>
         </svg>
 
-        <p style={{ fontSize: '14px', fontWeight: '800', color: '#92400e', marginTop: '6px', lineHeight: '1.4' }}>
-          {currentSession.descZh}
-        </p>
+        {/* Action Instruction Guide */}
+        <div style={{ background: '#ffffff', padding: '10px 14px', borderRadius: '14px', marginTop: '6px', border: '1px solid #bfdbfe' }}>
+          <div style={{ fontSize: '13px', fontWeight: '900', color: '#1d4ed8', marginBottom: '2px' }}>
+            🏃‍♀️ 動作步驟指引：
+          </div>
+          <div style={{ fontSize: '13px', fontWeight: '800', color: '#1e3a8a' }}>
+            {currentSession.descZh}
+          </div>
+        </div>
       </div>
     );
   };
 
   const contentMarkup = (
-    <div className={isInline ? "card" : "modal-card"} style={isInline ? { padding: '20px' } : { maxWidth: '440px', padding: '18px' }}>
+    <div className={isInline ? "card" : "modal-card"} style={isInline ? { padding: '20px' } : { maxWidth: '460px', padding: '18px' }}>
       {/* Top Header Bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -317,8 +386,8 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
         </button>
       </div>
 
-      {/* Cartoon Figure SVG Animation */}
-      {renderCartoonFigure()}
+      {/* Full Cartoon Stage SVG Animation */}
+      {renderCartoonStage()}
 
       {/* Action Controls */}
       <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
