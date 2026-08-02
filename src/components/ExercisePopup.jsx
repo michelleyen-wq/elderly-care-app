@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, Play, Pause, CheckCircle, Music, Volume2, Sparkles, Dumbbell, Clock, Tv } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Play, Pause, CheckCircle, Music, Volume2, Sparkles, Dumbbell, Clock, Tv, Film } from 'lucide-react';
 import { tts } from '../services/ttsService';
 
 export default function ExercisePopup({ isOpen, onClose, isInline = false, lang, t, onEarnApple }) {
@@ -7,7 +7,8 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
   const [isPlaying, setIsPlaying] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(300); // 5 minutes = 300 seconds
   const [isMusicOn, setIsMusicOn] = useState(true);
-  const [animationStep, setAnimationStep] = useState(0);
+
+  const canvasRef = useRef(null);
 
   // Exercise 4 Sessions Config
   const sessionsConfig = {
@@ -45,19 +46,236 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
     }
   };
 
+  const currentSession = sessionsConfig[selectedSession];
+
+  // 60FPS HTML5 Canvas Animated Video Engine Loop
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let frameCount = 0;
+
+    const render = () => {
+      frameCount++;
+      const time = frameCount * 0.05;
+      const width = canvas.width;
+      const height = canvas.height;
+
+      // 1. Clear & Background Gradient (Sky to Grass Park)
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, height);
+      skyGrad.addColorStop(0, '#bfdbfe');
+      skyGrad.addColorStop(0.55, '#e0f2fe');
+      skyGrad.addColorStop(0.55, '#86efac');
+      skyGrad.addColorStop(1, '#22c55e');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // 2. Draw Sun & Moving Clouds
+      ctx.fillStyle = '#fde047';
+      ctx.beginPath();
+      ctx.arc(width - 40, 35, 20, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Clouds
+      const cloud1X = (frameCount * 0.5) % (width + 100) - 50;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.beginPath();
+      ctx.arc(cloud1X, 35, 16, 0, Math.PI * 2);
+      ctx.arc(cloud1X + 18, 30, 20, 0, Math.PI * 2);
+      ctx.arc(cloud1X + 36, 35, 16, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 3. Draw Park Benches (Left: Grandma, Right: Grandpa)
+      // Left Bench
+      ctx.fillStyle = '#78350f';
+      ctx.fillRect(50, 95, 80, 10);
+      ctx.fillRect(55, 105, 8, 40);
+      ctx.fillRect(115, 105, 8, 40);
+      ctx.fillRect(45, 60, 8, 45);
+
+      // Right Bench
+      ctx.fillRect(190, 95, 80, 10);
+      ctx.fillRect(195, 105, 8, 40);
+      ctx.fillRect(255, 105, 8, 40);
+      ctx.fillRect(185, 60, 8, 45);
+
+      // Smooth Motion Trigonometry
+      const motion = isPlaying ? Math.sin(time * 3) : 0;
+      const armAngle = motion * 0.8; // Arm swing amplitude
+      const legOffsetY = currentSession.actionType === 'leg' && isPlaying ? Math.abs(Math.sin(time * 3)) * 14 : 0;
+      const headOffsetY = isPlaying ? Math.sin(time * 3) * 3 : 0;
+
+      // 4. Draw Cartoon Grandma (Left Character)
+      ctx.save();
+      ctx.translate(90, 50 + headOffsetY);
+
+      // Grandma Hair Bun
+      ctx.fillStyle = '#cbd5e1';
+      ctx.beginPath();
+      ctx.arc(0, 0, 22, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#94a3b8';
+      ctx.beginPath();
+      ctx.arc(0, -18, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Face
+      ctx.fillStyle = '#ffedd5';
+      ctx.beginPath();
+      ctx.arc(0, 2, 16, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Glasses
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(-6, 0, 4, 0, Math.PI * 2);
+      ctx.arc(6, 0, 4, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(-2, 0);
+      ctx.lineTo(2, 0);
+      ctx.stroke();
+
+      // Smile
+      ctx.strokeStyle = '#e11d48';
+      ctx.beginPath();
+      ctx.arc(0, 6, 5, 0.1 * Math.PI, 0.9 * Math.PI);
+      ctx.stroke();
+
+      ctx.restore();
+
+      // Grandma Body Clothes (Pink)
+      ctx.fillStyle = '#ec4899';
+      ctx.beginPath();
+      ctx.roundRect(74, 68 + headOffsetY, 32, 36, 6);
+      ctx.fill();
+
+      // Grandma Moving Arms (Left & Right)
+      // Left Arm
+      ctx.save();
+      ctx.translate(74, 72 + headOffsetY);
+      ctx.rotate(-0.5 + armAngle);
+      ctx.fillStyle = '#ffedd5';
+      ctx.fillRect(-22, -4, 22, 8);
+      ctx.restore();
+
+      // Right Arm
+      ctx.save();
+      ctx.translate(106, 72 + headOffsetY);
+      ctx.rotate(0.5 - armAngle);
+      ctx.fillStyle = '#ffedd5';
+      ctx.fillRect(0, -4, 22, 8);
+      ctx.restore();
+
+      // Grandma Legs
+      ctx.fillStyle = '#831843';
+      ctx.fillRect(78, 102 - legOffsetY, 10, 32);
+      ctx.fillRect(92, 102 - legOffsetY, 10, 32);
+      ctx.fillStyle = '#be185d';
+      ctx.fillRect(72, 132 - legOffsetY, 18, 8);
+      ctx.fillRect(90, 132 - legOffsetY, 18, 8);
+
+
+      // 5. Draw Cartoon Grandpa (Right Character)
+      ctx.save();
+      ctx.translate(230, 50 + headOffsetY);
+
+      // Grandpa Face & Hair
+      ctx.fillStyle = '#ffedd5';
+      ctx.beginPath();
+      ctx.arc(0, 2, 18, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hair
+      ctx.fillStyle = '#e2e8f0';
+      ctx.beginPath();
+      ctx.arc(0, -8, 18, Math.PI, Math.PI * 2);
+      ctx.fill();
+
+      // Eyes & Mustache
+      ctx.fillStyle = '#334155';
+      ctx.beginPath();
+      ctx.arc(-6, -2, 2, 0, Math.PI * 2);
+      ctx.arc(6, -2, 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(-8, 6);
+      ctx.quadraticCurveTo(0, 2, 8, 6);
+      ctx.stroke();
+
+      ctx.restore();
+
+      // Grandpa Body Clothes (Blue)
+      ctx.fillStyle = '#3b82f6';
+      ctx.beginPath();
+      ctx.roundRect(214, 68 + headOffsetY, 32, 36, 6);
+      ctx.fill();
+
+      // Grandpa Moving Arms (Left & Right)
+      ctx.save();
+      ctx.translate(214, 72 + headOffsetY);
+      ctx.rotate(-0.5 - armAngle);
+      ctx.fillStyle = '#ffedd5';
+      ctx.fillRect(-22, -4, 22, 8);
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(246, 72 + headOffsetY);
+      ctx.rotate(0.5 + armAngle);
+      ctx.fillStyle = '#ffedd5';
+      ctx.fillRect(0, -4, 22, 8);
+      ctx.restore();
+
+      // Grandpa Legs
+      ctx.fillStyle = '#1e3a8a';
+      ctx.fillRect(218, 102 - legOffsetY, 10, 32);
+      ctx.fillRect(232, 102 - legOffsetY, 10, 32);
+      ctx.fillStyle = '#0369a1';
+      ctx.fillRect(212, 132 - legOffsetY, 18, 8);
+      ctx.fillRect(230, 132 - legOffsetY, 18, 8);
+
+
+      // 6. Draw Live Video HUD Overlay
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+      ctx.fillRect(10, 10, 140, 24);
+      ctx.fillStyle = isPlaying ? '#ef4444' : '#22c55e';
+      ctx.beginPath();
+      ctx.arc(22, 22, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.fillText(isPlaying ? '🔴 1080p HD LIVE 視訊' : '🟢 視訊Ready 待命', 34, 26);
+
+      // Bottom Action Banner Overlay
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+      ctx.fillRect(10, height - 36, width - 20, 28);
+      ctx.fillStyle = '#fde047';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.fillText(`📺 跟著卡通爺爺奶奶：${currentSession.descZh}`, 18, height - 18);
+
+      animationFrameId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [isPlaying, selectedSession]);
+
   useEffect(() => {
     let timer = null;
-    let animTimer = null;
 
     if (isPlaying && secondsLeft > 0) {
       timer = setInterval(() => {
         setSecondsLeft(prev => prev - 1);
       }, 1000);
-
-      // Cartoon Figure Animation Step loop
-      animTimer = setInterval(() => {
-        setAnimationStep(prev => (prev + 1) % 4);
-      }, 500); // 500ms smooth animation rate
     } else if (secondsLeft === 0) {
       setIsPlaying(false);
       tts.stopExerciseMusic();
@@ -67,7 +285,6 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
 
     return () => {
       clearInterval(timer);
-      clearInterval(animTimer);
     };
   }, [isPlaying, secondsLeft, lang]);
 
@@ -84,8 +301,6 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
   }, [isPlaying, isMusicOn]);
 
   if (!isInline && !isOpen) return null;
-
-  const currentSession = sessionsConfig[selectedSession];
 
   const handleStartPause = () => {
     if (!isPlaying) {
@@ -110,154 +325,6 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
     const m = Math.floor(secs / 60);
     const s = secs % 60;
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
-
-  // Render Full Cartoon Exercise Stage SVG (Park Stage + Cartoon Grandma & Grandpa Character Duo)
-  const renderCartoonStage = () => {
-    const isOdd = animationStep % 2 === 1;
-    const bodyY = isPlaying && isOdd ? -8 : 0;
-    const armAngleLeft = isPlaying ? (isOdd ? -40 : 10) : 0;
-    const armAngleRight = isPlaying ? (isOdd ? 40 : -10) : 0;
-    const legOffsetY = currentSession.actionType === 'leg' && isPlaying && isOdd ? -16 : 0;
-
-    return (
-      <div style={{
-        background: 'linear-gradient(180deg, #bfdbfe 0%, #e0f2fe 60%, #86efac 60%, #4ade80 100%)',
-        borderRadius: '24px',
-        padding: '16px',
-        textAlign: 'center',
-        margin: '14px 0',
-        position: 'relative',
-        boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)',
-        border: '3px solid #60a5fa',
-        overflow: 'hidden'
-      }}>
-        {/* Stage Header Banner */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.85)', padding: '6px 12px', borderRadius: '12px', backdropFilter: 'blur(4px)', marginBottom: '10px' }}>
-          <div style={{ fontSize: '13px', fontWeight: '900', color: '#1e40af', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Tv size={16} color="#2563eb" /> 📺 卡通銀髮族運動動畫影音
-          </div>
-          <span style={{
-            background: isPlaying ? '#ef4444' : '#64748b',
-            color: 'white',
-            padding: '2px 8px',
-            borderRadius: '10px',
-            fontSize: '11px',
-            fontWeight: '800',
-            animation: isPlaying ? 'pulse 1.5s infinite' : 'none'
-          }}>
-            {isPlaying ? '🔴 播放示範中' : '⏸️ 準備就緒'}
-          </span>
-        </div>
-
-        {/* SVG Cartoon Senior Characters (Grandma & Grandpa Cartoon Duo on Park Benches) */}
-        <svg width="100%" height="190" viewBox="0 0 320 180" style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.15))' }}>
-          {/* Outdoor Park Background Elements */}
-          {/* Sun */}
-          <circle cx="280" cy="35" r="18" fill="#fde047" />
-          <line x1="280" y1="10" x2="280" y2="5" stroke="#facc15" strokeWidth="3" />
-          <line x1="300" y1="35" x2="305" y2="35" stroke="#facc15" strokeWidth="3" />
-          <line x1="295" y1="20" x2="300" y2="15" stroke="#facc15" strokeWidth="3" />
-          
-          {/* Park Trees */}
-          <rect x="25" y="70" width="10" height="40" fill="#78350f" />
-          <circle cx="30" cy="60" r="22" fill="#22c55e" />
-          <rect x="280" y="80" width="10" height="35" fill="#78350f" />
-          <circle cx="285" cy="70" r="18" fill="#16a34a" />
-
-          {/* Park Wooden Chairs */}
-          {/* Chair Left (Grandma) */}
-          <rect x="70" y="110" width="65" height="12" rx="4" fill="#92400e" />
-          <rect x="75" y="122" width="8" height="38" fill="#78350f" />
-          <rect x="122" y="122" width="8" height="38" fill="#78350f" />
-          <rect x="65" y="70" width="8" height="50" fill="#92400e" />
-
-          {/* Chair Right (Grandpa) */}
-          <rect x="185" y="110" width="65" height="12" rx="4" fill="#92400e" />
-          <rect x="190" y="122" width="8" height="38" fill="#78350f" />
-          <rect x="237" y="122" width="8" height="38" fill="#78350f" />
-          <rect x="180" y="70" width="8" height="50" fill="#92400e" />
-
-          {/* ================= CARTOON GRANDMA (LEFT) ================= */}
-          <g transform={`translate(0, ${bodyY})`}>
-            {/* Grandma Head */}
-            <circle cx="102" cy="55" r="22" fill="#cbd5e1" /> {/* Grey Bun Hair */}
-            <circle cx="102" cy="38" r="8" fill="#94a3b8" /> {/* Hair Bun */}
-            <circle cx="102" cy="58" r="16" fill="#ffedd5" /> {/* Face */}
-            {/* Glasses & Smile */}
-            <circle cx="96" cy="56" r="4" fill="none" stroke="#334155" strokeWidth="1.5" />
-            <circle cx="108" cy="56" r="4" fill="none" stroke="#334155" strokeWidth="1.5" />
-            <line x1="100" y1="56" x2="104" y2="56" stroke="#334155" strokeWidth="1.5" />
-            <path d="M 97 64 Q 102 68 107 64" stroke="#e11d48" strokeWidth="2" fill="none" />
-            <circle cx="92" cy="60" r="3" fill="#fda4af" opacity="0.8" />
-            <circle cx="112" cy="60" r="3" fill="#fda4af" opacity="0.8" />
-
-            {/* Grandma Clothes */}
-            <path d="M 87 74 L 117 74 L 122 110 L 82 110 Z" fill="#ec4899" rx="6" />
-
-            {/* Grandma Animated Arms */}
-            <g transform={`rotate(${armAngleLeft}, 87, 76)`}>
-              <rect x="67" y="75" width="22" height="8" rx="4" fill="#ffedd5" />
-              <circle cx="65" cy="79" r="5" fill="#ffedd5" />
-            </g>
-            <g transform={`rotate(${armAngleRight}, 117, 76)`}>
-              <rect x="117" y="75" width="22" height="8" rx="4" fill="#ffedd5" />
-              <circle cx="140" cy="79" r="5" fill="#ffedd5" />
-            </g>
-
-            {/* Grandma Legs */}
-            <g transform={`translate(0, ${legOffsetY})`}>
-              <rect x="88" y="110" width="10" height="35" rx="4" fill="#831843" />
-              <rect x="106" y="110" width="10" height="35" rx="4" fill="#831843" />
-              <rect x="82" y="145" width="18" height="8" rx="4" fill="#be185d" />
-              <rect x="103" y="145" width="18" height="8" rx="4" fill="#be185d" />
-            </g>
-          </g>
-
-          {/* ================= CARTOON GRANDPA (RIGHT) ================= */}
-          <g transform={`translate(0, ${bodyY})`}>
-            {/* Grandpa Head */}
-            <circle cx="217" cy="55" r="20" fill="#ffedd5" /> {/* Face */}
-            <path d="M 197 50 Q 217 38 237 50" fill="#e2e8f0" /> {/* Hair */}
-            {/* Mustache & Smile */}
-            <path d="M 210 63 Q 217 60 224 63" stroke="#64748b" strokeWidth="3" fill="none" />
-            <circle cx="212" cy="55" r="2" fill="#000" />
-            <circle cx="222" cy="55" r="2" fill="#000" />
-
-            {/* Grandpa Clothes */}
-            <path d="M 202 74 L 232 74 L 237 110 L 197 110 Z" fill="#3b82f6" rx="6" />
-
-            {/* Grandpa Animated Arms */}
-            <g transform={`rotate(${armAngleRight}, 202, 76)`}>
-              <rect x="182" y="75" width="22" height="8" rx="4" fill="#ffedd5" />
-              <circle cx="180" cy="79" r="5" fill="#ffedd5" />
-            </g>
-            <g transform={`rotate(${armAngleLeft}, 232, 76)`}>
-              <rect x="232" y="75" width="22" height="8" rx="4" fill="#ffedd5" />
-              <circle cx="255" cy="79" r="5" fill="#ffedd5" />
-            </g>
-
-            {/* Grandpa Legs */}
-            <g transform={`translate(0, ${legOffsetY})`}>
-              <rect x="203" y="110" width="10" height="35" rx="4" fill="#1e3a8a" />
-              <rect x="221" y="110" width="10" height="35" rx="4" fill="#1e3a8a" />
-              <rect x="197" y="145" width="18" height="8" rx="4" fill="#0369a1" />
-              <rect x="218" y="145" width="18" height="8" rx="4" fill="#0369a1" />
-            </g>
-          </g>
-        </svg>
-
-        {/* Action Instruction Guide */}
-        <div style={{ background: '#ffffff', padding: '10px 14px', borderRadius: '14px', marginTop: '6px', border: '1px solid #bfdbfe' }}>
-          <div style={{ fontSize: '13px', fontWeight: '900', color: '#1d4ed8', marginBottom: '2px' }}>
-            🏃‍♀️ 動作步驟指引：
-          </div>
-          <div style={{ fontSize: '13px', fontWeight: '800', color: '#1e3a8a' }}>
-            {currentSession.descZh}
-          </div>
-        </div>
-      </div>
-    );
   };
 
   const contentMarkup = (
@@ -355,7 +422,7 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
       </div>
 
       {/* 5-Min Countdown Clock & Music Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#eef2ff', padding: '12px 16px', borderRadius: '16px', border: '1px solid #c7d2fe' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#eef2ff', padding: '12px 16px', borderRadius: '16px', border: '1px solid #c7d2fe', marginBottom: '12px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Clock size={24} color="#4f46e5" />
           <div>
@@ -386,8 +453,15 @@ export default function ExercisePopup({ isOpen, onClose, isInline = false, lang,
         </button>
       </div>
 
-      {/* Full Cartoon Stage SVG Animation */}
-      {renderCartoonStage()}
+      {/* 60FPS HTML5 Canvas Cartoon Senior Exercise Video Screen */}
+      <div style={{ position: 'relative', width: '100%', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 6px 20px rgba(0,0,0,0.15)', border: '2px solid #bfdbfe' }}>
+        <canvas 
+          ref={canvasRef} 
+          width={340} 
+          height={180} 
+          style={{ width: '100%', height: 'auto', display: 'block' }}
+        />
+      </div>
 
       {/* Action Controls */}
       <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
