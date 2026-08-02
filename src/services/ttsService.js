@@ -1,19 +1,18 @@
-// TTS & Web Audio Service for CareMate
+// TTS Service and Web Audio Sound Effects Synthesizer
 
 class TTSService {
   constructor() {
-    this.synth = window.speechSynthesis || null;
-    this.voiceEnabled = true;
+    this.synth = typeof window !== 'undefined' ? window.speechSynthesis : null;
     this.audioCtx = null;
-    this.musicTimer = null;
-    this.isMusicPlaying = false;
+    this.exerciseMusicInterval = null;
+    this.currentTrack = 'ambient'; // 'ambient', 'piano', 'retro'
   }
 
   initAudioContext() {
-    if (!this.audioCtx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (AudioContext) {
-        this.audioCtx = new AudioContext();
+    if (!this.audioCtx && typeof window !== 'undefined') {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        this.audioCtx = new AudioCtx();
       }
     }
     if (this.audioCtx && this.audioCtx.state === 'suspended') {
@@ -21,139 +20,132 @@ class TTSService {
     }
   }
 
-  playChime(type = 'notification') {
-    try {
-      this.initAudioContext();
-      if (!this.audioCtx) return;
+  speak(text, lang = 'zh') {
+    if (!this.synth) return;
+    this.synth.cancel(); // Cancel ongoing speech
 
-      const osc = this.audioCtx.createOscillator();
-      const gain = this.audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(this.audioCtx.destination);
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = lang === 'zh' ? 'zh-TW' : 'en-US';
+    utterance.rate = 0.95; // Slightly slower for elderly comprehension
+    utterance.pitch = 1.0;
 
-      const now = this.audioCtx.currentTime;
-
-      if (type === 'rainbow') {
-        // Arpeggio Fanfare for Rainbow Celebration
-        const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C5 E5 G5 C6 E6
-        notes.forEach((freq, idx) => {
-          const o = this.audioCtx.createOscillator();
-          const g = this.audioCtx.createGain();
-          o.type = 'triangle';
-          o.frequency.value = freq;
-          o.connect(g);
-          g.connect(this.audioCtx.destination);
-          g.gain.setValueAtTime(0.2, now + idx * 0.08);
-          g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.4);
-          o.start(now + idx * 0.08);
-          o.stop(now + idx * 0.08 + 0.4);
-        });
-      } else if (type === 'apple') {
-        // Bright Apple Pick Sound
-        osc.frequency.setValueAtTime(880, now); // A5
-        osc.frequency.setValueAtTime(1760, now + 0.08); // A6
-        gain.gain.setValueAtTime(0.25, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-        osc.start(now);
-        osc.stop(now + 0.3);
-      } else if (type === 'alert') {
-        // High pitch double beep
-        osc.frequency.setValueAtTime(880, now);
-        osc.frequency.setValueAtTime(1046.5, now + 0.15);
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-        osc.start(now);
-        osc.stop(now + 0.35);
-      } else if (type === 'success') {
-        osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.setValueAtTime(659.25, now + 0.1);
-        osc.frequency.setValueAtTime(783.99, now + 0.2);
-        gain.gain.setValueAtTime(0.25, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-        osc.start(now);
-        osc.stop(now + 0.5);
-      } else {
-        osc.frequency.setValueAtTime(587.33, now);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-        osc.start(now);
-        osc.stop(now + 0.25);
-      }
-    } catch (e) {
-      console.warn("Audio playback error:", e);
-    }
+    this.synth.speak(utterance);
   }
 
-  // Soothing Exercise Background Music Generator using Web Audio API
-  startExerciseMusic() {
-    if (this.isMusicPlaying) return;
+  // Web Audio Synthesizer Chimes
+  playChime(type = 'success') {
     this.initAudioContext();
     if (!this.audioCtx) return;
 
-    this.isMusicPlaying = true;
-    const melody = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63]; // C4, E4, G4, C5...
-    let step = 0;
+    const now = this.audioCtx.currentTime;
+    const osc = this.audioCtx.createOscillator();
+    const gain = this.audioCtx.createGain();
 
-    this.musicTimer = setInterval(() => {
-      if (!this.isMusicPlaying || !this.audioCtx) return;
-      try {
-        const osc = this.audioCtx.createOscillator();
-        const gain = this.audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = melody[step % melody.length];
-        osc.connect(gain);
-        gain.connect(this.audioCtx.destination);
-        const now = this.audioCtx.currentTime;
-        gain.gain.setValueAtTime(0.08, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
-        osc.start(now);
-        osc.stop(now + 0.6);
-        step++;
-      } catch (err) {
-        console.warn(err);
-      }
-    }, 650);
-  }
+    osc.connect(gain);
+    gain.connect(this.audioCtx.destination);
 
-  stopExerciseMusic() {
-    this.isMusicPlaying = false;
-    if (this.musicTimer) {
-      clearInterval(this.musicTimer);
-      this.musicTimer = null;
+    if (type === 'success') {
+      // Gentle Arpeggio: C5 - E5 - G5 - C6
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(523.25, now); // C5
+      osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+      osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+      osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+
+      gain.gain.setValueAtTime(0.15, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+      osc.start(now);
+      osc.stop(now + 0.6);
+    } else if (type === 'rainbow') {
+      // Celebration Glissando
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.exponentialRampToValueAtTime(1200, now + 0.5);
+
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+      osc.start(now);
+      osc.stop(now + 0.5);
+    } else if (type === 'apple') {
+      // Cheerful reward chime
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, now); // D5
+      osc.frequency.setValueAtTime(880.00, now + 0.15); // A5
+
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+      osc.start(now);
+      osc.stop(now + 0.5);
+    } else if (type === 'warning') {
+      // SOS Loud Alert Alarm
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.setValueAtTime(660, now + 0.2);
+      osc.frequency.setValueAtTime(880, now + 0.4);
+
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+      osc.start(now);
+      osc.stop(now + 0.6);
+    } else {
+      // Standard notification click
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, now);
+      gain.gain.setValueAtTime(0.1, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+      osc.start(now);
+      osc.stop(now + 0.2);
     }
   }
 
-  speak(text, lang = 'zh-TW') {
-    if (!this.voiceEnabled || !this.synth) return;
+  // Soothing Exercise Background Music Synthesizer (Ambient, Piano, Retro)
+  playExerciseMusic(track = 'ambient') {
+    this.initAudioContext();
+    if (!this.audioCtx) return;
+    this.stopExerciseMusic();
+    this.currentTrack = track;
 
-    setTimeout(() => {
-      try {
-        this.synth.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = lang === 'zh' ? 'zh-TW' : (lang === 'en' ? 'en-US' : lang);
-        utterance.rate = 0.9;
-        utterance.pitch = 1.05;
+    let step = 0;
+    const chordsAmbient = [261.63, 329.63, 392.00, 523.25]; // C major
+    const chordsPiano = [349.23, 440.00, 523.25, 698.46]; // F major
+    const chordsRetro = [392.00, 493.88, 587.33, 783.99]; // G major
 
-        const voices = this.synth.getVoices();
-        if (voices && voices.length > 0) {
-          const targetLang = lang.startsWith('zh') ? 'zh' : 'en';
-          const matchedVoice = voices.find(v => v.lang.toLowerCase().includes(targetLang));
-          if (matchedVoice) {
-            utterance.voice = matchedVoice;
-          }
-        }
+    this.exerciseMusicInterval = setInterval(() => {
+      if (!this.audioCtx) return;
+      const now = this.audioCtx.currentTime;
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
 
-        this.synth.speak(utterance);
-      } catch (err) {
-        console.warn("TTS Error:", err);
-      }
-    }, 150);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+
+      let activeChords = chordsAmbient;
+      if (this.currentTrack === 'piano') activeChords = chordsPiano;
+      if (this.currentTrack === 'retro') activeChords = chordsRetro;
+
+      const freq = activeChords[step % activeChords.length];
+      osc.type = this.currentTrack === 'piano' ? 'sine' : (this.currentTrack === 'retro' ? 'triangle' : 'sine');
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.05, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+
+      osc.start(now);
+      osc.stop(now + 0.8);
+
+      step++;
+    }, 700);
   }
 
-  setVoiceEnabled(enabled) {
-    this.voiceEnabled = enabled;
-    if (!enabled && this.synth) {
-      this.synth.cancel();
+  stopExerciseMusic() {
+    if (this.exerciseMusicInterval) {
+      clearInterval(this.exerciseMusicInterval);
+      this.exerciseMusicInterval = null;
     }
   }
 }
